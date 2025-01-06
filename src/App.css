@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    font-family: "Roboto Condensed",sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    margin: 0;
+    padding:0;
+    background-color: #2f3640;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container{
+    width: 350px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 9px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.input-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 2px solid #bcc2fa;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.cityInput{
+    flex: 1;
+    height: 40px;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    padding: 10px;
+}
+
+.search-icon{
+    background: none;
+    border: none;
+    padding: 10px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image{
+    text-align: center;
+    height: 150px;
+    margin-bottom: 10px;
+}
+
+.image img{
+    width: 160px;
+    height: 160px;
+}
+
+.temp,
+.location,
+.country{
+    margin-top: 5px;
+    font-size: 30px;
+    color: #333;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.temp{
+    font-weight: 600;
+}
+
+.location{
+    color:rgb(206, 114, 23);
+    font-weight:500;
+    font-size: 35px;
+}
+
+.country{
+    font-size: 20px;
+    font-weight: 500;
+    color: #7c3d3d;
+}
+
+.co-ord{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.co-ord div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.co-ord div span{
+    font-size: 14px;
+}
+
+.humidity-percentage,
+.wind-percentage,
+.co-ord div span:nth-child(2){
+    font-size: 18px;
+    font-weight: bold;
+    color: #3a2c2c;
+    padding-top: 5px;
+}
+
+.icon{
+    width: 50px;
+    height: 50px;
+}
+
+.data-container{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.element{
+    text-align: center;
+}
+
+.text{
+    font-size: 14px;
+    color: #444141;
+}
+
+.copyright{
+    font-size: 14px;
+    text-align: center;
+    color: #2f3640;
+}
+
+.copyright span{
+    color: #000;
+}
+
+.loading-msg,
+.error-msg,
+.city-not-found{
+    margin-top: 10px;
+    color: #2f3640;
+    font-size: 22px;
+    font-weight: 400;
+    text-align: center;
+}
