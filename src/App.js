@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import './App.css';
 import { FaSearch } from 'react-icons/fa';
 import clearImg from '../src/Assets/Clear Sun.png';
@@ -7,13 +8,10 @@ import drizzleImg from '../src/Assets/Drizzle.jpg';
 import rainImg from '../src/Assets/Rain.jpg';
 import snowImg from '../src/Assets/Snow.jpg';
 import windImg from '../src/Assets/Wind.jpg';
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-
-
-const WeatherDetails = ({icon, temp, city, country, lat, long, humidity, wind}) =>{
-  return(
+const WeatherDetails = ({ icon, temp, city, country, lat, long, humidity, wind }) => {
+  return (
     <>
       <div className='image'>
         <img src={icon} alt="Imageicon" />
@@ -33,14 +31,14 @@ const WeatherDetails = ({icon, temp, city, country, lat, long, humidity, wind}) 
       </div>
       <div className="data-container">
         <div className="element">
-          <img src={humidityImg} alt="Humidity" className='icon'/>
+          <img src={humidityImg} alt="Humidity" className='icon' />
           <div className="data">
             <div className="humidity-percentage">{humidity}%</div>
             <div className="text">Humidity</div>
           </div>
         </div>
         <div className="element">
-          <img src={windImg} alt="wind" className='icon'/>
+          <img src={windImg} alt="wind" className='icon' />
           <div className="data">
             <div className="wind-percentage">{wind} km/h</div>
             <div className="text">Wind Speed</div>
@@ -51,7 +49,7 @@ const WeatherDetails = ({icon, temp, city, country, lat, long, humidity, wind}) 
   )
 }
 
-WeatherDetails.propTypes ={
+WeatherDetails.propTypes = {
   icon: PropTypes.string.isRequired,
   temp: PropTypes.number.isRequired,
   city: PropTypes.string.isRequired,
@@ -72,88 +70,85 @@ function App() {
   const [humidity, setHumidity] = useState(0);
   const [wind, setWind] = useState(0);
 
-  const [text, setText] = useState("Chennai");
+  const [text, setText] = useState("");
   const [cityNotFound, setCityNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-const weatherIconsList = {
-  "01d": clearImg,
-  "01n": clearImg,
-  "02d": cloudImg,
-  "02n": cloudImg,
-  "03n": drizzleImg,
-  "03d": drizzleImg,
-  "04n": drizzleImg,
-  "04d": drizzleImg,
-  "09d": rainImg,
-  "09n": rainImg,
-  "10d": rainImg,
-  "13d": snowImg,
-  "13n": snowImg
-};
-  
-const fetchData = async () =>{
-  setLoading(true);
-  const API_KEY = "589d05df7c4e18d8a27269169faaa26d";
-  const URL = `https://api.openweathermap.org/data/2.5/weather?q=${text}&appid=${API_KEY}&units=Metric`;
-  
+  const weatherIconsList = useMemo(
+    () => ({
+      "01d": clearImg,
+      "01n": clearImg,
+      "02d": cloudImg,
+      "02n": cloudImg,
+      "03n": drizzleImg,
+      "03d": drizzleImg,
+      "04n": drizzleImg,
+      "04d": drizzleImg,
+      "09d": rainImg,
+      "09n": rainImg,
+      "10d": rainImg,
+      "13d": snowImg,
+      "13n": snowImg,
+    }),
+    []
+  );
 
-  try{
-    const response = await fetch(URL);
-    const data = await response.json();
-    if(data.cod ==="404"){
-      console.error("City not found");
-      setCityNotFound(true);
+  const fetchData = async () => {
+    setLoading(true);
+    const API_KEY = "589d05df7c4e18d8a27269169faaa26d";
+    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${text}&appid=${API_KEY}&units=Metric`;
+
+    try {
+      const response = await fetch(URL);
+      const data = await response.json();
+      if (data.cod === "404") {
+        console.error("City not found");
+        setCityNotFound(true);
+        setLoading(false);
+        return;
+      }
+      setHumidity(data.main.humidity);
+      setWind(data.wind.speed);
+      setTemp(Math.floor(data.main.temp));
+      setCity(data.name);
+      setCountry(data.sys.country);
+      setLat(data.coord.lat);
+      setLong(data.coord.lon);
+
+      const weatherIcon = data.weather[0].icon;
+      setIcon(weatherIconsList[weatherIcon] || clearImg);
+      setCityNotFound(false);
+    } catch (error) {
+      console.error("An error occurred:", error.message);
+      setError("An error occurred while fetching the data!");
+    } finally {
       setLoading(false);
-      return;
     }
-    setHumidity(data.main.humidity);
-    setWind(data.wind.speed);
-    setTemp(Math.floor(data.main.temp));
-    setCity(data.name);
-    setCountry(data.sys.country);
-    setLat(data.coord.lat);
-    setLong(data.coord.lon);
+  };
 
-    const weatherIcon = data.weather[0].icon;
-    setIcon(weatherIconsList[weatherIcon] || clearImg);
-    setCityNotFound(false);
+  const handleCity = (e) => {
+    setText(e.target.value);
+  };
 
-  }catch(error){
-    console.error("An error occurred:",error.message);
-    setError("An error occurred while fetching a data!");
-  }finally{
-    setLoading(false);
-  }
-};
-
-const handleCity = (e) =>{
-  setText(e.target.value);
-};
-
-const handleEnterKey = (e) =>{
-  if(e.key==="Enter"){
-    fetchData();
-  }
-}
-
-useEffect(()=>{
-  fetchData();
-},[]);
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      fetchData();
+    }
+  };
 
   return (
     <div className="container">
       <div className="input-container">
-        <input 
+        <input
           type="text"
-          className='cityInput' 
-          placeholder='Enter a city Name'
+          className="cityInput"
+          placeholder="Enter a city Name"
           onChange={handleCity}
           value={text}
           onKeyDown={handleEnterKey}
         />
-        <button className='search-icon' onClick={()=> fetchData()}>
+        <button className="search-icon" onClick={() => fetchData()}>
           <FaSearch />
         </button>
       </div>
@@ -162,18 +157,20 @@ useEffect(()=>{
       {error && <div className="error-msg">{error}</div>}
       {cityNotFound && <div className="city-not-found">City not found</div>}
 
-      {!loading && !cityNotFound && <WeatherDetails 
-        icon={icon} 
-        temp={temp} 
-        city={city}
-        country={country}
-        lat={lat}
-        long={long}
-        humidity={humidity}
-        wind={wind}
-      />}
+      {!loading && !cityNotFound && (
+        <WeatherDetails
+          icon={icon}
+          temp={temp}
+          city={city}
+          country={country}
+          lat={lat}
+          long={long}
+          humidity={humidity}
+          wind={wind}
+        />
+      )}
       <p className="copyright">
-        Work Done By <span>Britvasan R</span> 
+        Work Done By <span>Britvasan R</span>
       </p>
     </div>
   );
